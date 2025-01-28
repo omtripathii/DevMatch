@@ -17,7 +17,7 @@ app.use("/home",(req,res,next)=>{
     next();
 },(req,res,next)=>{
     console.log('This is my own route handler 3');
-    res.send('This is my own middleware')
+    next();
 },(req,res)=>{
     console.log('This is my own route handler 4');
     res.send('This is my own middleware and i am handling multiple routes with this')
