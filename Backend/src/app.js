@@ -2,15 +2,27 @@ const express = require('express');
 
 const app = express();
 
-app.get('/',(req,res)=>{
-    res.send('Hello from /');
+// app.use("/context/:username/:password", (req, res) => {
+//     console.log(req.query)
+//     console.log(req.params)
+//     res.send('This is my own middleware')
+    
+// })
+
+app.use("/home",(req,res,next)=>{
+    console.log('This is my own route handler 1');
+    next();
+},(req,res,next)=>{
+    console.log('This is my own route handler 2');
+    next();
+},(req,res,next)=>{
+    console.log('This is my own route handler 3');
+    res.send('This is my own middleware')
+},(req,res)=>{
+    console.log('This is my own route handler 4');
+    res.send('This is my own middleware and i am handling multiple routes with this')
 })
-app.get('/dash',(req,res)=>{
-    res.send('Hello from /dash');
-})
-app.get('/api',(req,res)=>{
-    res.send('Hello from /api');
-})
+
 app.listen(3000,()=>{
     console.log('Server is running on port 3000');
 })
