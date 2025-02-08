@@ -61,6 +61,49 @@ app.get("/user" , async(req,res)=>{
   }
 })
 
+// Deleting a user from the database
+
+app.delete("/delete", async(req,res)=>{
+  try {
+    const userId = req.body.id
+    await User.findByIdAndDelete(userId)
+    res.status(200).send("User deleted successfully")
+  } catch (error) {
+    res.status(400).send("Something went wrong")
+  }
+})
+
+
+// Updating a user data in the database
+
+app.patch("/update", async(req,res)=>{
+  try {
+    const userId = req.body.id
+    const data = req.body
+    await User.findByIdAndUpdate(userId, data , {returnDocument: 'after'})
+    res.status(200).send("User updated successfully")
+  } catch (error) {
+    res.status(400).send("Something went wrong")
+  }
+})
+
+
+// updating the user data in the database using email id
+
+app.patch("/updateByEmail", async(req,res)=>{
+  try {
+    const emailId = req.body.email
+    const data = req.body
+    await User.findOneAndUpdate({email: emailId}, data , {returnDocument: 'after'})
+    res.status(200).send("User updated successfully")
+  } catch (error) {
+    res.status(400).send("Something went wrong")
+  }
+})
+
+
+
+
 connectDB()
   .then(() => {
     console.log("Database connected");
