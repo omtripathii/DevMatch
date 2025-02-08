@@ -7,6 +7,9 @@ const User = require("./models/User");
 const connectDB = require("./config/database");
 
 app.use(express.json());
+
+// Adding User to the database
+
 app.post("/signup", async (req, res) => {
 
   // Dynamically getting the data from the API
@@ -30,6 +33,33 @@ app.post("/signup", async (req, res) => {
   */
 
 });
+
+// Getting all the users from the database
+app.get("/feed", async(req,res)=>{
+  try {
+    const users = await User.find({})
+    console.log(users);
+    res.status(200).send(users)
+  } catch (error) {
+    res.status(400).send("Something went wrong")
+  }
+})
+
+// Getting a specific user by the Email Id
+
+app.get("/user" , async(req,res)=>{
+  try {
+    const emailId = req.query.email;
+    const user = await User.find({email: emailId})
+    console.log(user);
+    res.status(200).send(user)
+    if (!user) {
+      res.status(404).send("User not found")
+    }
+  } catch (error) {
+    res.status(400).send("Something went wrong")
+  }
+})
 
 connectDB()
   .then(() => {
