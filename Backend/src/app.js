@@ -41,7 +41,7 @@ app.get("/feed", async(req,res)=>{
     console.log(users);
     res.status(200).send(users)
   } catch (error) {
-    res.status(400).send("Something went wrong")
+    res.status(400).send("Something went wrong"+ error)
   }
 })
 
@@ -57,7 +57,7 @@ app.get("/user" , async(req,res)=>{
       res.status(404).send("User not found")
     }
   } catch (error) {
-    res.status(400).send("Something went wrong")
+    res.status(400).send("Something went wrong"+ error)
   }
 })
 
@@ -69,21 +69,29 @@ app.delete("/delete", async(req,res)=>{
     await User.findByIdAndDelete(userId)
     res.status(200).send("User deleted successfully")
   } catch (error) {
-    res.status(400).send("Something went wrong")
+    res.status(400).send("Something went wrong" + error)
   }
 })
 
 
 // Updating a user data in the database
 
-app.patch("/update", async(req,res)=>{
+app.patch("/update/:userID", async(req,res)=>{
   try {
-    const userId = req.body.id
+    const userId = req.params?.userID
     const data = req.body
-    await User.findByIdAndUpdate(userId, data , {returnDocument: 'after'})
+    const ALLOWED_UPDATES = ["age", "password", "about", "skills", "photoUrl"]
+    const isValidUpdate = Object.keys(data).every((update)=> ALLOWED_UPDATES.includes(update))
+    if(!isValidUpdate){
+      throw new Error("Update not allowed")
+    }
+    if(data?.skills.length > 10){
+      throw new Error("Skills limit exceeded")
+    }
+    await User.findByIdAndUpdate(userId, data , {returnDocument: 'after' , runValidators: true})
     res.status(200).send("User updated successfully")
   } catch (error) {
-    res.status(400).send("Something went wrong")
+    res.status(400).send("Something went wrong" + error)
   }
 })
 
@@ -92,8 +100,12 @@ app.patch("/update", async(req,res)=>{
 
 app.patch("/updateByEmail", async(req,res)=>{
   try {
+
+    
     const emailId = req.body.email
     const data = req.body
+
+    
     await User.findOneAndUpdate({email: emailId}, data , {returnDocument: 'after'})
     res.status(200).send("User updated successfully")
   } catch (error) {
