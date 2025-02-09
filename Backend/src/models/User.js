@@ -1,6 +1,6 @@
 const e = require("express");
 const mongoose = require("mongoose");
-
+const validator = require("validator");
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       trim: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Email is invalid");
+        }
+      },
     },
     password: {
       type: String,
@@ -29,9 +34,11 @@ const userSchema = new mongoose.Schema(
       minLength: 6,
       maxLength: 18,
       validate(value) {
-        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,18}$/.test(
-          value
-        );
+        if (!validator.isStrongPassword(value)) {
+          throw new Error(
+            "Password should contain atleast one uppercase, one lowercase and one digit"
+          );
+        }
       },
       message:
         "Password should contain atleast one uppercase, one lowercase and one digit",
@@ -54,6 +61,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default:
         "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("Invalid URL");
+        }
+      },
     },
     skills: {
       type: [String],
