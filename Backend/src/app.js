@@ -6,10 +6,12 @@ const app = express();
 const User = require("./models/User");
 const connectDB = require("./config/database");
 const { validateSignUpData } = require("./utils/validate");
-
+const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { adminAuth, userAuth } = require("./middlewares/auth");
 app.use(express.json());
-
+app.use(cookieParser());
 // Adding User to the database
 
 app.post("/signup", async (req, res) => {
@@ -53,16 +55,54 @@ app.post("/login", async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
-    const isValidPass = await bcrypt.compare(password, user.password);
+    const isValidPass = await user.isValidPassword(password);
     if (!isValidPass) {
       return res.status(401).send("Invalid Password");
     } else {
+
+      // Generating the token
+      // const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      //   expiresIn: "7h",
+      // });
+      const token = await user.getJWT();
+      res.cookie("token", token);
       return res.status(200).send("User logged in successfully");
     }
   } catch (error) {
     return res.status(400).send("Something went wrong");
   }
 });
+
+
+// Profile API
+
+app.get("/profile", userAuth , async (req, res) => {
+  try {
+
+    res.status(200).send(req.user);
+
+    // const cookie = req.cookies;
+    // console.log(cookie);
+    // const {token} = cookie;
+
+    // // Validate the token
+    // const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    // console.log(decoded);
+    // const {id} = decoded;
+    // const user = await User.findById(id);
+    // if(!user){
+    //   return res.status(404).send("No user found");
+    // }else{
+    //   return res.status(200).send(user);
+    // }
+
+
+  } catch (error) {
+    res.status(400).send("Something went wrong" + error.message);
+  }
+});
+
+
 
 // Getting all the users from the database
 app.get("/feed", async (req, res) => {

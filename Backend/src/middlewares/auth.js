@@ -1,24 +1,39 @@
-const adminAuth = (req, res, next) => {
-  console.log("admin is getting authenticated");
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
-  const token = "xyz";
-  const isValid = token === "xyz";
-  if (!isValid) {
-    res.status(401).send("Unauthorized , You are not an admin");
-  } else {
-    next();
+const userAuth = async(req, res, next) => {
+ try {
+  const {token} = req.cookies;
+  if(!token){
+    return res.status(401).send("Unauthorized, Please login first");
   }
+  const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+  if(!decoded){
+    return res.status(401).send("Unauthorized, Please login first");
+  }
+  const {id} = decoded;
+  const user = await User.findById(id);
+  if(!user){
+    return res.status(401).send("Unauthorized, Please login first");
+  }else{
+    req.user = user;
+  }
+  next();
+ } catch (error) {
+  res.status(401).send("Unauthorized, Please login first");
+ }
 };
-const userAuth = (req, res, next) => {
-  console.log("user is getting authenticated");
+const adminAuth = (req, res, next) => {
+  // console.log("admin is getting authenticated");
 
-  const token = "xyz";
-  const isValid = token === "xyz";
-  if (!isValid) {
-    res.status(401).send("Unauthorized , You are not an user");
-  } else {
-    next();
-  }
+  // const token = "xyz";
+  // const isValid = token === "xyz";
+  // if (!isValid) {
+  //   res.status(401).send("Unauthorized , You are not an admin");
+  // } else {
+  //   next();
+  // }
 };
 
 module.exports = { adminAuth, userAuth };
