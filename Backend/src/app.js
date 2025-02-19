@@ -7,8 +7,6 @@ const connectDB = require("./config/database");
 app.use(express.json());
 app.use(cookieParser());
 
-
-
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestAuth = require("./routes/request");

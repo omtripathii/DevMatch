@@ -75,7 +75,7 @@ requestAuth.post(
           .status(404)
           .json({ message: "Connection Request does not exist" });
       }
-      // Change the status in the DB 
+      // Change the status in the DB
       connectionRequest.status = status;
       const data = await connectionRequest.save();
       res.status(200).json({
