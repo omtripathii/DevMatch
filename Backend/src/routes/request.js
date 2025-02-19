@@ -38,7 +38,7 @@ requestAuth.post("/request/:status/:toUserId", userAuth, async (req, res) => {
 
     const data = await connectionRequest.save();
     res.status(200).json({
-      message: "The conncetoin request sent successsfully",
+      message: "The connection request sent successsfully",
       data,
     });
   } catch (error) {
