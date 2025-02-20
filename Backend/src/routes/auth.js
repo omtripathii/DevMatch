@@ -35,11 +35,13 @@ authRouter.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.status(404).send("User not found");
+      // return res.status(404).send("User not found");
+      return res.status(401).send("Invalid Credentials");
     }
     const isValidPass = await user.isValidPassword(password);
     if (!isValidPass) {
-      return res.status(401).send("Invalid Password");
+      // return res.status(401).send("Invalid Password");
+      return res.status(401).send("Invalid Credentials");
     } else {
       // Generating the token
       // const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {

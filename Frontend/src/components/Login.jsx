@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("Suresh@gmail.com");
   const [password, setPassword] = useState("Suresh123@");
+  const [error,setError] = useState("")
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const handleLogin = async (e) => {
@@ -26,7 +27,8 @@ const Login = () => {
       dispatch(addUser(res.data));
       return navigate("/")
     } catch (error) {
-      console.error("error occured " + error);
+      setError(error.message)
+      console.log("error occured " + error);
     }
   };
 
@@ -74,6 +76,7 @@ const Login = () => {
                 }}
               />
             </div>
+            <p className="text-red-500 my-2">{error}</p>
             <button
               type="button"
               className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition duration-300"
