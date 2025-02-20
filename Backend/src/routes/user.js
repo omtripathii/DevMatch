@@ -3,7 +3,7 @@ const userRouter = express.Router();
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/User");
-const USER_SAFE_DATA = "firstName lastName about photoUrl skills";
+const USER_SAFE_DATA = "firstName lastName about photoUrl skills age gender";
 
 // Get API to fetch all the received requests for a User
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
