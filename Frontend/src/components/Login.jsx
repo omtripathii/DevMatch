@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("Suresh@gmail.com");
   const [password, setPassword] = useState("Suresh123@");
-  const [error,setError] = useState("")
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -25,10 +25,9 @@ const Login = () => {
       );
       // console.log(res.data);
       dispatch(addUser(res.data));
-      return navigate("/")
+      return navigate("/");
     } catch (error) {
-      setError(error.message)
-      console.log("error occured " + error);
+      setError(error?.response?.data || "Something went wrong");
     }
   };
 
