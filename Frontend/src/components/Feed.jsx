@@ -28,7 +28,7 @@ const Feed = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       {users?.length > 0 ? (
-        <UserCard user={users[2]} />
+        <UserCard user={users[0]} />
       ) : (
         <p className="text-gray-600 text-xl">Loading or not enough users...</p>
       )}

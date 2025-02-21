@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { X, Heart } from "lucide-react";
 const UserCard = ({ user }) => {
   if (!user) {
-    return <p>No user available</p>;
+    return <p className="text-black">No user available</p>;
   }
  
   return (
