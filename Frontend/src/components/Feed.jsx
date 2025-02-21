@@ -16,11 +16,12 @@ const Feed = () => {
         withCredentials: true,
       });
       dispatch(addFeed(res.data));
+      console.log(res.data);
+      
     } catch (error) {
       console.error("Error fetching user feed:", error);
     }
   };
-
   useEffect(() => {
     fetchFeedData();
   }, []);
