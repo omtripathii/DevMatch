@@ -18,7 +18,11 @@ const UserCard = ({ user }) => {
             {user.firstName}, {user.age}
           </h2>
           <p className="text-gray-300">{user.about}</p>
-          <p className="text-gray-300">{user.skills}</p>
+          <p className="text-gray-300">
+            {Array.isArray(user.skills)
+              ? user.skills.join(", ")
+              : user.skills?.split(", ").join(", ") || "No skills listed"}
+          </p>
         </div>
       </div>
 

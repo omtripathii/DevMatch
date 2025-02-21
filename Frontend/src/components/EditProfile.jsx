@@ -14,6 +14,7 @@ const EditProfile = ({ user }) => {
   const [age, setAge] = useState(user.age);
   const [gender, setGender] = useState(user.gender);
   const [error, setError] = useState(null);
+  const [toast, setToast] = useState(false);
   const dispatch = useDispatch();
   const saveData = async () => {
     try {
@@ -33,7 +34,10 @@ const EditProfile = ({ user }) => {
         }
       );
       dispatch(addUser(res?.data?.data));
-      console.log(res?.data?.data);
+      setToast(true);
+      setTimeout(() => {
+        setToast(false);
+      }, 3000);
     } catch (error) {
       setError(error);
     }
@@ -149,6 +153,13 @@ const EditProfile = ({ user }) => {
           user={{ firstName, lastName, about, photoUrl, skills, age, gender }}
         />
       </div>
+      {toast && (
+        <div className="toast toast-center toast-middle">
+          <div className="alert alert-success">
+            <span>Profile saved successfully.</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
