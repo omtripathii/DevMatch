@@ -9,8 +9,11 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // Allow PATCH
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
+app.options("*", cors());
 app.use(express.json());
 app.use(cookieParser());
 

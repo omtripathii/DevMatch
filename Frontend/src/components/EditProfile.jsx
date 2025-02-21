@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import UserCard from "./Usercard";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const EditProfile = ({ user }) => {
   const [firstName, setFirstName] = useState(user.firstName);
@@ -9,7 +13,22 @@ const EditProfile = ({ user }) => {
   const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
   const [age, setAge] = useState(user.age);
   const [gender, setGender] = useState(user.gender);
-
+  const dispatch = useDispatch();
+  const saveData = async () => {
+    try {
+      const res = await axios.patch(
+        BASE_URL + "/profile/edit",
+        { firstName, lastName, about, photoUrl, skills, age, gender },
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(addUser(res?.data?.data));
+      console.log(res?.data?.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="flex flex-col md:flex-row justify-center items-center gap-6 bg-white p-4 min-h-screen">
       {/* Edit Profile Form */}
@@ -105,8 +124,9 @@ const EditProfile = ({ user }) => {
             </div>
 
             <button
-              type="submit"
+              type="button"
               className="w-full bg-blue-500 hover:bg-blue-600 text-black py-3 rounded-lg text-sm font-medium transition duration-300 shadow-md"
+              onClick={saveData()}
             >
               Save Changes
             </button>
@@ -116,7 +136,9 @@ const EditProfile = ({ user }) => {
 
       {/* UserCard Preview */}
       <div className="w-full md:w-1/2 lg:w-1/3 ">
-        <UserCard user={{ firstName, lastName, about, photoUrl, skills, age, gender }} />
+        <UserCard
+          user={{ firstName, lastName, about, photoUrl, skills, age, gender }}
+        />
       </div>
     </div>
   );

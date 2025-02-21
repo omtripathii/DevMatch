@@ -2,6 +2,16 @@ const express = require("express");
 const profileAuth = express.Router();
 const { userAuth } = require("../middlewares/auth");
 const bcrypt = require("bcrypt");
+const cors = require("cors")
+
+profileAuth.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Profile API
 profileAuth.get("/profile/view", userAuth, async (req, res) => {
@@ -38,7 +48,7 @@ profileAuth.patch("/profile/edit", userAuth, async (req, res) => {
       user[update] = req.body[update];
     });
     await user.save();
-    res.status(200).send("Profile updated successfully");
+    res.status(200).json({message:"Profile updated successfully",data:user});
   } catch (error) {
     res.status(400).send("Something went wrong" + error.message);
   }
