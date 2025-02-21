@@ -58,7 +58,7 @@ requestAuth.post(
 
       // Status validation it should be either accepted or rejected
       const isAllowedStatus = ["accepted", "rejected"];
-      if (!isAllowedStatus) {
+      if (!isAllowedStatus.includes(status)) {
         return res.status(400).json({ message: "Status is not valid" });
       }
 
@@ -80,7 +80,7 @@ requestAuth.post(
       const data = await connectionRequest.save();
       res.status(200).json({
         message: "Connection request " + status + " succesfully",
-        data,
+        data: connectionRequest,
       });
     } catch (error) {
       res.status(400).send("Something went wrong " + error);

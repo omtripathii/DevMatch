@@ -15,12 +15,13 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
       status: "interested",
     }).populate("fromUserId", USER_SAFE_DATA);
 
-    const newData = connectionRequests.map((item) => item.fromUserId);
+    const data = connectionRequests;
+    // const newData = connectionRequests.map((item) => item.fromUserId);
     if (!connectionRequests) {
       return res.status(404).json({ message: "No Requests are Pending" });
     }
 
-    res.status(200).json({ message: "Your Pending Requests: ", newData });
+    res.status(200).json({ message: "Your Pending Requests: ", data });
   } catch (error) {
     res.status(400).send("Something went wrong " + error);
   }

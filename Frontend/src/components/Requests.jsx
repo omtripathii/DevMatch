@@ -2,31 +2,61 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests } from "../utils/requestSlice";
-import { Check, X , Search } from "lucide-react";
+import { Check, X, Search } from "lucide-react";
 import axios from "axios";
+
 const Requests = () => {
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const requests = useSelector((store) => store.requests);
+  const [search, setSearch] = useState("");
+
   const fetchRequests = async () => {
     try {
       const res = await axios.get(BASE_URL + "/user/requests/received", {
         withCredentials: true,
       });
-      console.log(res?.data?.newData);
-      dispatch(addRequests(res?.data?.newData));
+
+      // Extract `data` and properly format it for the UI
+      const formattedRequests = res?.data?.data?.map((request) => ({
+        _id: request._id, // Request ID (needed for API calls)
+        userId: request.fromUserId._id,
+        firstName: request.fromUserId.firstName,
+        lastName: request.fromUserId.lastName,
+        about: request.fromUserId.about,
+        photoUrl: request.fromUserId.photoUrl,
+        skills: request.fromUserId.skills || [],
+        status: request.status, // Important for showing request status
+      })) || [];
+
+      dispatch(addRequests(formattedRequests));
     } catch (error) {
+      console.error("Error fetching requests:", error);
       setError(error);
     }
   };
+
   useEffect(() => {
     fetchRequests();
   }, []);
-    const [search, setSearch] = useState("");
-  
-    const filteredRequests = requests.filter((user) =>
-      user.firstName.toLowerCase().includes(search.toLowerCase())
-    );
+
+  const filteredRequests = requests.filter((user) =>
+    user.firstName.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const requestReview = async (status, _id) => {
+    try {
+      await axios.post(
+        `${BASE_URL}/request/review/${status}/${_id}`,
+        {},
+        { withCredentials: true }
+      );
+      fetchRequests(); // Refresh list after review
+    } catch (error) {
+      console.error("Error updating request:", error);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl">
       <h2 className="text-2xl font-semibold text-center mb-4 text-black">
@@ -65,17 +95,23 @@ const Requests = () => {
                 <p className="text-sm text-gray-500">{user.about}</p>
               </div>
               <div className="flex flex-wrap justify-center sm:justify-end gap-2 mt-3 sm:mt-0">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-600 transition text-sm">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-600 transition text-sm"
+                  onClick={() => requestReview("accepted", user._id)}
+                >
                   <Check size={18} /> Accept
                 </button>
-                <button className="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-600 transition text-sm">
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-600 transition text-sm"
+                  onClick={() => requestReview("rejected", user._id)}
+                >
                   <X size={18} /> Reject
                 </button>
               </div>
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500">No Requets found.</p>
+          <p className="text-center text-gray-500">No Requests found.</p>
         )}
       </div>
     </div>
