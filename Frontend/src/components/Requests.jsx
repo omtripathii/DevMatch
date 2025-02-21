@@ -58,7 +58,7 @@ const Requests = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl">
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl my-9">
       <h2 className="text-2xl font-semibold text-center mb-4 text-black">
         Pending Requests
       </h2>
