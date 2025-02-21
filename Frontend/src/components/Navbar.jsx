@@ -8,14 +8,18 @@ import { removeUser } from "../utils/userSlice";
 function Navbar() {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      await axios.post(BASE_URL + "/logout",{}, {
-        withCredentials: true,
-      });
-      dispatch(removeUser())
-      navigate("/login")
+      await axios.post(
+        BASE_URL + "/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(removeUser());
+      navigate("/login");
     } catch (error) {
       console.error("Something went wrong " + error);
     }
@@ -54,7 +58,10 @@ function Navbar() {
                   </Link>
                 </li>
                 <li>
-                  <a>Settings</a>
+                  <Link to="/connections">Connnections</Link>
+                </li>
+                <li>
+                  <Link to="/requests">Requests</Link>
                 </li>
                 <li>
                   <a onClick={handleLogout}>Logout</a>
