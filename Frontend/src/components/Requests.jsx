@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests } from "../utils/requestSlice";
-
+import axios from "axios";
 const Requests = () => {
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
