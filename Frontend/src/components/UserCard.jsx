@@ -4,7 +4,7 @@ const UserCard = ({ user }) => {
   if (!user) {
     return <p>No user available</p>;
   }
-
+ 
   return (
     <div className="flex flex-col items-center">
       <div className="relative w-80 h-[450px] bg-gray shadow-lg rounded-2xl overflow-hidden cursor-pointer">
@@ -18,7 +18,7 @@ const UserCard = ({ user }) => {
             {user.firstName}, {user.age}
           </h2>
           <p className="text-gray-300">{user.about}</p>
-          <p className="text-gray-300">{user.skills.join(", ")}</p>
+          <p className="text-gray-300">{user.skills}</p>
         </div>
       </div>
 

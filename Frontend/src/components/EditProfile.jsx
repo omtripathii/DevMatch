@@ -9,16 +9,25 @@ const EditProfile = ({ user }) => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [about, setAbout] = useState(user.about);
-  const [skills, setSkills] = useState(user.skills);
+  const [skills, setSkills] = useState(user.skills?.join(", ") || "");
   const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
   const [age, setAge] = useState(user.age);
   const [gender, setGender] = useState(user.gender);
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const saveData = async () => {
     try {
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
-        { firstName, lastName, about, photoUrl, skills, age, gender },
+        {
+          firstName,
+          lastName,
+          about,
+          photoUrl,
+          skills: skills.split(",").map((s) => s.trim()),
+          age,
+          gender,
+        },
         {
           withCredentials: true,
         }
@@ -26,7 +35,7 @@ const EditProfile = ({ user }) => {
       dispatch(addUser(res?.data?.data));
       console.log(res?.data?.data);
     } catch (error) {
-      console.error(error);
+      setError(error);
     }
   };
   return (
@@ -68,7 +77,7 @@ const EditProfile = ({ user }) => {
               <textarea
                 name="about"
                 value={about}
-                onChange={(e) => setAbout(e.target.value)}
+                onChange={(e) => setAbout([e.target.value])}
                 className="w-full p-3 border rounded-lg text-sm bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
               ></textarea>
             </div>
@@ -122,11 +131,11 @@ const EditProfile = ({ user }) => {
                 </select>
               </div>
             </div>
-
+            <p className="text-red-500">{error}</p>
             <button
               type="button"
               className="w-full bg-blue-500 hover:bg-blue-600 text-black py-3 rounded-lg text-sm font-medium transition duration-300 shadow-md"
-              onClick={saveData()}
+              onClick={saveData}
             >
               Save Changes
             </button>
