@@ -23,6 +23,7 @@ const Body = () => {
         navigate("/login");
       }
       console.error("Something went wrong " + error);
+      navigate("/login");
     }
   };
   useEffect(() => {
