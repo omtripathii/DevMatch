@@ -81,7 +81,7 @@ const EditProfile = ({ user }) => {
               <textarea
                 name="about"
                 value={about}
-                onChange={(e) => setAbout([e.target.value])}
+                onChange={(e) => setAbout(e.target.value)}
                 className="w-full p-3 border rounded-lg text-sm bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
               ></textarea>
             </div>
