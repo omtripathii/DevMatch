@@ -2,16 +2,16 @@ const express = require("express");
 const profileAuth = express.Router();
 const { userAuth } = require("../middlewares/auth");
 const bcrypt = require("bcrypt");
-const cors = require("cors")
+// const cors = require("cors")
 
-profileAuth.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// profileAuth.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
 
 // Profile API
 profileAuth.get("/profile/view", userAuth, async (req, res) => {
