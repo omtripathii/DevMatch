@@ -7,6 +7,7 @@ const cors = require("cors");
 
 app.use(
   cors({
+    // origin: "http://localhost:5173",
     origin: ["http://3.95.151.100", "http://3.95.151.100:3000"],
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // Allow PATCH
