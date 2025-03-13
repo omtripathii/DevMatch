@@ -3,7 +3,7 @@ const requestAuth = express.Router();
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/User");
-
+const {run} = require("../utils/sendEmail")
 // Sending the connection request
 requestAuth.post("/request/:status/:toUserId", userAuth, async (req, res) => {
   try {
@@ -37,6 +37,8 @@ requestAuth.post("/request/:status/:toUserId", userAuth, async (req, res) => {
     });
 
     const data = await connectionRequest.save();
+    const emailSend = await run()
+    console.log(emailSend);
     res.status(200).json({
       message: "The connection request sent successsfully",
       data,
@@ -78,6 +80,7 @@ requestAuth.post(
       // Change the status in the DB
       connectionRequest.status = status;
       const data = await connectionRequest.save();
+
       res.status(200).json({
         message: "Connection request " + status + " succesfully",
         data: connectionRequest,
