@@ -29,19 +29,31 @@ profileAuth.patch("/profile/edit", userAuth, async (req, res) => {
       ALLOWED_UPDATES.includes(update)
     );
     if (!isValidUpdate) {
-      throw new Error("Update not allowed");
+      return res.status(400).json({ error: "Update not allowed" });
     }
-    if (req.body?.skills.length > 10) {
-      throw new Error("Skills limit exceeded");
+    if (req.body?.skills && req.body.skills.length > 10) {
+      return res.status(400).json({ error: "Skills limit exceeded" });
     }
+    
+    // Sanitize the about field if it exists
+    if (req.body.about) {
+      req.body.about = req.body.about.toString().trim();
+    }
+    
     const user = req.user;
     Object.keys(req.body).forEach((update) => {
       user[update] = req.body[update];
     });
+    
     await user.save();
-    res.status(200).json({message:"Profile updated successfully",data:user});
+    return res.status(200).json({message: "Profile updated successfully", data: user});
   } catch (error) {
-    res.status(400).send("Something went wrong" + error.message);
+    console.error("Profile update error:", error);
+    return res.status(400).json({
+      error: "Something went wrong", 
+      message: error.message,
+      field: error.path // This will help identify which field caused the issue
+    });
   }
 });
 
